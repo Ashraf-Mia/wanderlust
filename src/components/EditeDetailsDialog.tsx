@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { toast } from "@/components/ui/toast";
 import { Destination } from "@/lib/destinations";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
 
 const categories = [
   "Beach",
@@ -132,14 +133,16 @@ const EditeDetailsDialog = ({ destination }: DestinationProps) => {
     });
     setForm(destination);
 
+    const token = getTokenFromClient();
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _id, ...updatedData } = form;
     const res = await fetch(
-      `http://localhost:8000/destination/${destination._id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/destination/${destination._id}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updatedData),
       },

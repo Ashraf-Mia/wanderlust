@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import { Destination, formatPrice } from "@/lib/destinations";
 import { toast } from "@/components/ui/toast";
+import { useSession } from "@/lib/auth-client";
 const PERKS = [
   "Free cancellation up to 7 days",
   "Travel insurance included",
@@ -16,23 +17,50 @@ type BookingCard = {
 };
 
 const BookingCard = ({ destination }: BookingCard) => {
-  const handleBookNow = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const handleBookNow = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const departureDate = formData.get("departureDate");
+
+    const data = {
+      userName: user?.name,
+      email: user?.email,
+      image: user?.image,
+      ...destination,
+      departureDate: departureDate,
+      bookingDate: new Date(),
+    };
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/booking`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const bookingRes = await res.json();
+
+    console.log(bookingRes);
+
     toast.add({
       type: "success",
       title: "Booking requested",
-      description: `"${destination.name}" for ${formatDepartureDate(destination.departure)} has been requested.`,
+      description: `"${destination.name}" for ${destination.departure} has been requested.`,
     });
   };
 
-  function formatDepartureDate(departure: string): string {
-    const date = new Date(departure);
-    if (Number.isNaN(date.getTime())) return departure;
-    return date.toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    });
-  }
+  // function formatDepartureDate(departure: string): string {
+  //   const date = new Date(departure);
+  //   if (Number.isNaN(date.getTime())) return departure;
+  //   return date.toLocaleDateString("en-US", {
+  //     month: "2-digit",
+  //     day: "2-digit",
+  //     year: "numeric",
+  //   });
+  // }
 
   return (
     <aside>
@@ -45,31 +73,31 @@ const BookingCard = ({ destination }: BookingCard) => {
             </p>
             <p className="mt-1 text-sm text-zinc-500">per person</p>
           </div>
+          <form onSubmit={handleBookNow}>
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="departure-date"
+                className="text-sm font-medium text-zinc-900"
+              >
+                Departure Date
+              </label>
+              <Input
+                name="departureDate"
+                type="date"
+                id="departure-date"
+                defaultValue={destination.departure}
+                className="h-10 border-transparent bg-[#F6F7F8] text-zinc-700 shadow-none"
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="departure-date"
-              className="text-sm font-medium text-zinc-900"
+            <Button
+              type="submit"
+              className="h-10 w-full bg-[#00A5CC] px-5 text-white hover:bg-[#008FB3]"
             >
-              Departure Date
-            </label>
-            <Input
-              id="departure-date"
-              readOnly
-              value={formatDepartureDate(destination.departure)}
-              className="h-10 border-transparent bg-[#F6F7F8] text-zinc-700 shadow-none"
-            />
-          </div>
-
-          <Button
-            type="button"
-            onClick={handleBookNow}
-            className="h-10 w-full bg-[#00A5CC] px-5 text-white hover:bg-[#008FB3]"
-          >
-            Book Now
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Button>
-
+              Book Now
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Button>
+          </form>
           <ul className="flex flex-col gap-2 border-t border-zinc-100 pt-4">
             {PERKS.map((perk) => (
               <li

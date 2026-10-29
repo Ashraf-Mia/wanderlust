@@ -1,7 +1,7 @@
 import { DestinationExplorer } from "@/components/destination-explorer";
 import type { Destination } from "@/lib/destinations";
 
-const DESTINATIONS_API = "http://localhost:8000/destination";
+const DESTINATIONS_API = `${process.env.NEXT_PUBLIC_API_URL}/destination`;
 
 async function getDestinations(): Promise<Destination[]> {
   try {

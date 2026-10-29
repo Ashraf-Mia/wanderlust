@@ -1,14 +1,15 @@
-import Image from "next/image"
-import { ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 const searchFields = [
   { label: "Location", placeholder: "Address, City Or Zip" },
   { label: "Date/Duration", placeholder: "Anytime/3 Days" },
   { label: "Budget", placeholder: "$0-$3000" },
   { label: "People", placeholder: "5-10" },
-] as const
+] as const;
 
 export function Banner() {
   return (
@@ -36,12 +37,14 @@ export function Banner() {
             Explore Now
             <ArrowRight className="h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            className="h-12 rounded-md border-white/30 bg-white/20 px-8 text-sm font-semibold uppercase tracking-wider text-white backdrop-blur-sm hover:bg-white/30 hover:text-white"
-          >
-            View Destination
-          </Button>
+          <Link href="/destination">
+            <Button
+              variant="outline"
+              className="h-12 rounded-md border-white/30 bg-white/20 px-8 text-sm font-semibold uppercase tracking-wider text-white backdrop-blur-sm hover:bg-white/30 hover:text-white"
+            >
+              View Destination
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -71,5 +74,5 @@ export function Banner() {
         </div>
       </div>
     </section>
-  )
+  );
 }

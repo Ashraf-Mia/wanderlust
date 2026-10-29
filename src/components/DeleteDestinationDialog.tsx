@@ -12,6 +12,9 @@ import {
 
 import { buttonVariants } from "@/components/ui/button";
 import { Destination } from "@/lib/destinations";
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+// import { getTokenFromServer } from "@/lib/getTokenFromServer";
+
 import { cn } from "cn";
 import { Trash2 } from "lucide-react";
 import { redirect } from "next/navigation";
@@ -20,10 +23,15 @@ type DestinationProps = {
 };
 const DeleteDestinationDialog = ({ destination }: DestinationProps) => {
   const handleDelete = async () => {
+    const token = await getTokenFromClient();
+    // const token = await getTokenFromServer();
     const res = await fetch(
-      `http://localhost:8000/destination/${destination._id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/destination/${destination._id}`,
       {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
       },
     );
     const data = await res.json();

@@ -21,7 +21,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/destination", label: "Destinations" },
   { href: "/add-destination", label: "Add Destination" },
-  { href: "/bookings", label: "My Bookings" },
+  { href: "/my-bookings", label: "My Bookings" },
   { href: "/admin", label: "Admin" },
 ] as const;
 
@@ -35,7 +35,7 @@ export function Navbar() {
 
   const { data: session } = useSession();
   const user = session?.user;
-  console.log(user);
+  // console.log(user);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-black/5 bg-white shadow-sm">

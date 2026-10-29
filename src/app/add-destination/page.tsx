@@ -16,6 +16,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Toaster, toast } from "@/components/ui/toast";
 
+import { getTokenFromClient } from "@/lib/getTokenFromClient";
+
 const categories = [
   "Beach",
   "Mountain",
@@ -104,6 +106,20 @@ export default function AddDestinationPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const token = await getTokenFromClient();
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/add-destination`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(form),
+      },
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const result = await res.json();
     const found = validate(form);
     setErrors(found);
     if (Object.keys(found).length > 0) return;
@@ -114,16 +130,6 @@ export default function AddDestinationPage() {
       description: `"${form.name}" has been added successfully.`,
     });
     setForm(initialForm);
-
-    const res = await fetch("http://localhost:8000/add-destination", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
-    const data = await res.json();
-    console.log("object", data);
   };
 
   const handleReset = () => {

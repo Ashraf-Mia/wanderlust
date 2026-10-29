@@ -3,16 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CalendarDays, Check, MapPin, Star } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Input } from "@/components/ui/input";
+
 import { Toaster } from "@/components/ui/toast";
 
 import { type Destination } from "@/lib/destinations";
 import EditeDetailsDialog from "./EditeDetailsDialog";
 import DeleteDestinationDialog from "./DeleteDestinationDialog";
 import BookingCard from "./booking/BookingCard";
-// import BookingCard from "./booking/BookingCard";
 
 /** Placeholder content until the API exposes rating, reviews, and highlights. */
 const FALLBACK_RATING = 4.9;
